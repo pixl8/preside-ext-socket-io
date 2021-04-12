@@ -1,0 +1,7 @@
+{
+	  "id"        : "preside-ext-socket-io"
+	, "title"     : "Socket.IO For Preside"
+	, "author"    : "Pixl8 Group"
+	, "version"   : "$VERSION_NUMBER"
+	, "dependsOn" : []
+}
