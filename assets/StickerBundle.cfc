@@ -1,7 +1,7 @@
 component output=false {
 
 	public void function configure( bundle ) {
-
+		bundle.addAsset( id="socketio", path="/js/lib/socketio-2.3.1.min.js" );
 		bundle.addAssets(
 			  directory   = "/js"
 			, match       = function( path ){ return ReFindNoCase( "_[0-9a-f]{8}\..*?\.min.js$", arguments.path ); }
@@ -9,7 +9,6 @@ component output=false {
 				return ListDeleteAt( path, ListLen( path, "/" ), "/" ) & "/";
 			}
 		);
-
 		bundle.addAssets(
 			  directory   = "/css"
 			, match       = function( path ){ return ReFindNoCase( "_[0-9a-f]{8}\..*?\.min.css$", arguments.path ); }
@@ -18,6 +17,7 @@ component output=false {
 			}
 		);
 
+		bundle.asset( "/js/specific/socketiodemo/" ).dependsOn( "socketio" );
 	}
 
 }

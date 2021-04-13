@@ -25,7 +25,7 @@ module.exports = function( grunt ) {
 					expand  : true,
 					cwd     : "js",
 					src     : ["**/*.js", "!**/*.min.js" ],
-					dest    : "js",
+					dest    : "js/",
 					ext     : ".min.js",
 					rename  : function( dest, src ){
 						var pathSplit = src.split( '/' );

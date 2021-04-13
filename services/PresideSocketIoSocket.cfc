@@ -1,18 +1,23 @@
 /**
  * @singleton false
  */
-component accessors=true extends="app.extensions.preside-ext-socket-io.socketiolucee.models.SocketIoSocket" {
+component accessors=true {
 
 	property name="sessionData" type="struct";
+	property name="socket" type="any";
 
 // CONSTRUCTOR
 	public any function init( required any socket ) {
-		setId( arguments.socket.getId() );
-		setNamespace( arguments.socket.getNamespace() );
-		setIoServer( arguments.socket.getIoServer() );
-		setHttpRequest( arguments.socket.getHttpRequest() );
+		setSocket( arguments.socket );
 
 		return this;
+	}
+
+// PROXY
+	public any function onMissingMethod( methodName, args ) {
+		var socket = getSocket();
+
+		return socket[ arguments.methodName ]( argumentCollection=args );
 	}
 
 // PUBLIC API METHODS

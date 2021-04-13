@@ -56,8 +56,10 @@ component {
 
 		for( var namespace in _getNamespaces() ) {
 			io.of( "/#namespace#" ).on( "connect", function( socket ){
+				var nsName = socket.getNamespace().getName().reReplace( "^/", "" );
+
 				$runEvent(
-					  event = "socketio.namespace.#namespace#.onconnect"
+					  event = "socketio.namespace.#nsName#.onconnect"
 					, private = true
 					, prepostexempt = true
 					, eventArguments = { socket=_getPresideSocket( arguments.socket ) }
