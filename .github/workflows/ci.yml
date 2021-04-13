@@ -54,17 +54,14 @@ jobs:
         env:
           VERSION_NUMBER: ${{ steps.versiongen.outputs.semver_release_string }}
 
-      # Uncomment to build static assets
-      # with grunt
-      #
-      # - name: Build static assets with grunt
-      #   if: "env.PUBLISH == 'true'"
-      #   shell: bash
-      #   run: |
-      #     cd assets &&
-      #     npm install &&
-      #     grunt &&
-      #     rm -rf node_modules
+      - name: Build static assets with grunt
+        if: "env.PUBLISH == 'true'"
+        shell: bash
+        run: |
+          cd assets &&
+          npm install &&
+          grunt &&
+          rm -rf node_modules
 
       - name: Zip project
         if: "env.PUBLISH == 'true'"
