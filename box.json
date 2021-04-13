@@ -17,5 +17,11 @@
         ".gitignore",
         ".github/*",
         ".twgit_features_subject"
-    ]
+    ],
+    "dependencies":{
+        "socketiolucee":"^0.1.0+0000054"
+    },
+    "installPaths":{
+        "socketiolucee":"socketiolucee/"
+    }
 }
