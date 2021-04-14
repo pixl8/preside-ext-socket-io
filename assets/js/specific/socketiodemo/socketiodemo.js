@@ -1,37 +1,39 @@
 ( function( $ ){
-	var socket = io( "/demo" )
-	  , user;
+	var $chatContainer = $( "#demo-chat-interaction-container" )
+	  , socket
+	  , setupChatWindow
+	  , showChatMessage
+	  , submitMessage;
 
-	function setUsername() {
-		socket.emit('setUsername', document.getElementById('name').value);
+// local functions (not sockio specific)
+	setupChatWindow = function( username ) {
+		$chatContainer.html( '<p><strong>Welcome to the chat ' + username + '!</strong></p>\
+			<form id="chat-form"><input type="text" id="message">\
+		    	<button type="submit" name="button">Send</button>\
+		    </form>\
+		    <div id="message-container" class="well"></div>'
+		);
+	};
+
+	showChatMessage = function( data ){
+		$( "#message-container").append( '<div><b>' + data.user + '</b>: ' + data.message + '</div>' );
+	};
+
+	submitMessage = function( e ){
+		var msg = $( "#message" ).val();
+		if ( msg.length ) {
+			socket.emit( 'msg', msg );
+			$( "#message" ).val( "" );
+		}
+
+		return false;
 	};
 
 
-	socket.on('userExists', function(data) {
-		document.getElementById('error-container').innerHTML = data;
-	});
+// setup socket and listeners
+	socket = io( "/demo" ); // connect to socket.io namespace 'demo'
+	socket.on( 'userSet', setupChatWindow ); // fired once connection successful
+	socket.on( 'newmsg', showChatMessage ); // fired on new incoming messages
+	$chatContainer.on( "submit", "#chat-form", submitMessage ); // trigger sending messages
 
-	socket.on('userSet', function(username) {
-		user = username;
-		document.getElementById( 'demo-chat-interaction-container' ).innerHTML = '<input type="text" id="message">\
-		    <button type="button" name="button" id="send-message-button">Send</button>\
-		    <div id="message-container" class="well"></div>';
-
-		$( "#send-message-button" ).on( "click", sendMessage );
-	});
-
-	function sendMessage() {
-		var msg = document.getElementById('message').value;
-		if(msg) {
-			socket.emit('msg', {message: msg, user: user});
-		}
-	}
-
-	socket.on('newmsg', function(data) {
-		if(user) {
-			document.getElementById('message-container').innerHTML += '<div><b>' + data.user + '</b>: ' + data.message + '</div>';
-		}
-	} );
-
-	$( "#start-button" ).on( "click", setUsername );
 } )( jQuery );

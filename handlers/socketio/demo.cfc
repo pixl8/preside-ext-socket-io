@@ -5,6 +5,10 @@ component {
 			event.notFound();
 		}
 
+		if ( !isLoggedIn() ) {
+			event.accessDenied( reason="LOGIN_REQUIRED" );
+		}
+
 		event.include( "/js/specific/socketiodemo/" );
 	}
 }
