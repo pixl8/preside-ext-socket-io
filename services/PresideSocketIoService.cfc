@@ -42,6 +42,19 @@ component {
 		return true;
 	}
 
+	public struct function getStats(){
+		var stats = {};
+		var namespaces = _getServer().getRegisteredNamespaces();
+
+		stats.namespaceCount = ArrayLen( namespaces );
+		stats.namespaces = {};
+		for( var namespace in namespaces ) {
+			stats.namespaces[ namespace ] = { socketCount=_getServer().namespace( namespace ).getSocketCount() };
+		}
+
+		return stats;
+	}
+
 // PRIVATE HELPERS
 	private void function _discoverNamespaces() {
 		var namespaceHandlers = $getColdbox().listHandlers( thatStartWith="socketio.namespace." );
