@@ -6,6 +6,7 @@ component {
 
 		_setupExtensionSettings( settings );
 		_setupFeatures( settings );
+		_setupHealthchecks( settings );
 		_setupInterceptors( conf );
 	}
 
@@ -24,6 +25,12 @@ component {
 	private void function _setupFeatures( settings ) {
 		settings.features.socketio = settings.features.socketio ?: { enabled=true };
 		settings.features.socketiodemo = settings.features.socketiodemo ?: { enabled=true };
+	}
+
+	private void function _setupHealthchecks( settings ) {
+		settings.healthcheckServices.socketio = {
+			interval = CreateTimeSpan( 0, 0, 0, 5 ) // 5 second healthchecks
+		};
 	}
 
 	private void function _setupInterceptors( conf ) {

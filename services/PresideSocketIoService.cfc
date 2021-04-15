@@ -24,7 +24,22 @@ component {
 		stopServer();
 	}
 	public void function stopServer() {
+		$SystemOutput( "Shutting down Socket.IO embededded server at [#serverHost#:#serverPort#]" );
 		_getServer().shutdown();
+		$SystemOutput( "Socket.IO server shutdown" );
+	}
+
+	public boolean function healthcheck() {
+		var state         = _getServer().getState();
+		var runningStates = [ "RUNNING", "STARTED", "STARTING" ];
+
+		if ( !_getServer().isRunning() && !ArrayFindNoCase( runningStates, state ) ) {
+			$SystemOutput( "Socket.IO server is not running. Current state: #state#. Attempting to start now..." );
+			startServer();
+			return false;
+		}
+
+		return true;
 	}
 
 // PRIVATE HELPERS
@@ -42,6 +57,7 @@ component {
 	}
 
 	private void function _setupServer() {
+		$SystemOutput( "Starting Socket.IO embededded server at [#serverHost#:#serverPort#]" );
 		var io = CreateObject( "app.extensions.preside-ext-socket-io.socketiolucee.models.SocketIoServer" ).init(
 			  host  = serverHost
 			, port  = serverPort
