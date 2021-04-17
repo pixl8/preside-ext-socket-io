@@ -5,6 +5,8 @@
  */
 component extends="app.extensions.preside-ext-socket-io.socketiolucee.models.SocketIoDefaultEventRunner" {
 
+	property name="sessionStorage" inject="presidecms:object:session_storage";
+
 	public any function init() {
 		return this;
 	}
@@ -68,9 +70,10 @@ component extends="app.extensions.preside-ext-socket-io.socketiolucee.models.Soc
 		}
 
 		if ( Len( presideSessionId ) ) {
-			var presideSession = $getPresideObject( "session_storage" ).selectData( id=presideSessionId, selectFields=[ "value" ] );
+			var presideSession = sessionStorage.selectData( id=presideSessionId, selectFields=[ "value" ] );
 
 			if ( presideSession.recordCount ) {
+				sessionStorage.updateData( id=presideSessionId, data={ expiry=( _getUnixTimeStamp() + _getSessionTimeoutInSeconds() ) } );
 				try {
 					return DeserializeJson( presideSession.value );
 				} catch( any e ) {
@@ -80,6 +83,20 @@ component extends="app.extensions.preside-ext-socket-io.socketiolucee.models.Soc
 		}
 
 		return {};
+	}
+
+	private numeric function _getSessionTimeoutInSeconds() {
+		var appSettings   = getApplicationSettings();
+		var timeout       = appSettings.sessionTimeout ?: CreateTimeSpan( 0, 0, 20, 0 );
+		var secondsInADay = 86400;
+
+		return Round( Val( timeout ) * secondsInADay );
+	}
+
+	private numeric function _getUnixTimeStamp() {
+		var epochInMs = CreateObject( "java", "java.time.Instant" ).now().toEpochMilli();
+
+		return Ceiling( epochInMs / 1000  );
 	}
 
 }
