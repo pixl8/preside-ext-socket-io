@@ -1,27 +1,24 @@
 component {
 
 	private void function onConnect( socket ) {
-		if ( !isFeatureEnabled( "socketiodemo" ) || !_setupUser( socket ) ) {
-			socket.disconnect();
+		if ( !isFeatureEnabled( "socketiodemo" ) || !arguments.socket.isWebUser() ) {
+			socket.emit( 'accessdenied' );
 			return;
 		}
 
-		socket.on('msg', function( msg ) {
-			socket.getNamespace().emit( 'newmsg', {
-				  message = msg
-				, user    = socket.getWebsiteLoggedInUserDetails().display_name
-			});
-		});
-	}
-
-// helpers
-	private boolean function _setupUser( socket ) {
 		var user = socket.getWebsiteLoggedInUserDetails();
-		if ( !StructCount( user ) ) {
-			return false;
-		}
-
-		socket.emit('userSet', user.display_name );
-		return true;
+		arguments.socket.emit( 'welcome', user.display_name );
 	}
+
+	private void function onSocketMsg( namespace, socket, args=[] ) {
+		if ( arguments.socket.isWebUser() ) {
+			arguments.namespace.emit( "newmsg", {
+				  message = arguments.args[ 1 ] ?: ""
+				, user    = arguments.socket.getWebsiteLoggedInUserDetails().display_name
+			});
+		} else {
+			arguments.socket.emit( "accessdenied" );
+		}
+	}
+
 }

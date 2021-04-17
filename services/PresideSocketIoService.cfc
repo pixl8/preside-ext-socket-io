@@ -4,8 +4,9 @@
  */
 component {
 
-	property name="serverHost" inject="coldbox:setting:socketio.host";
-	property name="serverPort" inject="coldbox:setting:socketio.port";
+	property name="serverHost"  inject="coldbox:setting:socketio.host";
+	property name="serverPort"  inject="coldbox:setting:socketio.port";
+	property name="eventRunner" inject="presideSocketIoEventRunner";
 
 // CONSTRUCTOR
 	public any function init() {
@@ -17,7 +18,7 @@ component {
 // PUBLIC API METHODS
 	public void function startServer() {
 		_setupServer();
-		_setupNamespaceListeners();
+		_registerNamespaces();
 	}
 
 	public void function shutdown() {
@@ -55,6 +56,7 @@ component {
 		return stats;
 	}
 
+
 // PRIVATE HELPERS
 	private void function _discoverNamespaces() {
 		var namespaceHandlers = $getColdbox().listHandlers( thatStartWith="socketio.namespace." );
@@ -72,65 +74,21 @@ component {
 	private void function _setupServer() {
 		$SystemOutput( "Starting Socket.IO embededded server at [#serverHost#:#serverPort#]" );
 		var io = CreateObject( "app.extensions.preside-ext-socket-io.socketiolucee.models.SocketIoServer" ).init(
-			  host  = serverHost
-			, port  = serverPort
-			, start = true
+			  host        = serverHost
+			, port        = serverPort
+			, start       = true
+			, eventRunner = eventRunner
 		);
 
 		_setServer( io );
 	}
 
-	private void function _setupNamespaceListeners() {
+	private void function _registerNamespaces() {
 		var io = _getServer();
 
-		for( var namespace in _getNamespaces() ) {
-			io.of( "/#namespace#" ).on( "connect", function( socket ){
-				var nsName = socket.getNamespace().getName().reReplace( "^/", "" );
-
-				$runEvent(
-					  event = "socketio.namespace.#nsName#.onconnect"
-					, private = true
-					, prepostexempt = true
-					, eventArguments = { socket=_getPresideSocket( arguments.socket ) }
-				);
-			} );
+		for( var ns in _getNamespaces() ) {
+			io.namespace( "/" & ns );
 		}
-
-	}
-
-	private any function _getPresideSocket( required any socket ) {
-		var wrappedSocket = new PresideSocketIoSocket( arguments.socket );
-		var sessionData = _getPresideSessionDataFromSocket( arguments.socket );
-
-		wrappedSocket.setSessionData( sessionData );
-
-		return wrappedSocket;
-	}
-
-	private struct function _getPresideSessionDataFromSocket( required any socket ) {
-		var socketHttpReq    = arguments.socket.getHttpRequest();
-		var reqCookies       = socketHttpReq.getCookies();
-		var presideSessionId = "";
-
-		for( var reqCookie in reqCookies ) {
-			if ( ( reqCookie.name ?: "" ) == "PSID" ) {
-				presideSessionId = reqCookie.value ?: "";
-			}
-		}
-
-		if ( Len( presideSessionId ) ) {
-			var presideSession = $getPresideObject( "session_storage" ).selectData( id=presideSessionId, selectFields=[ "value" ] );
-
-			if ( presideSession.recordCount ) {
-				try {
-					return DeserializeJson( presideSession.value );
-				} catch( any e ) {
-					$raiseError( e );
-				}
-			}
-		}
-
-		return {};
 	}
 
 

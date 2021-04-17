@@ -3,7 +3,6 @@
  */
 component accessors=true {
 
-	property name="sessionData" type="struct";
 	property name="socket" type="any";
 
 // CONSTRUCTOR
@@ -21,8 +20,15 @@ component accessors=true {
 	}
 
 // PUBLIC API METHODS
+	public boolean function isWebUser() {
+		return Len( getWebsiteLoggedInUserId() );
+	}
+	public boolean function isAdminUser() {
+		return Len( getAdminLoggedInUserId() );
+	}
+
 	public string function getAdminLoggedInUserId() {
-		var sessionData = getSessionData();
+		var sessionData = socket.getSocketData();
 
 		return sessionData.admin_user ?: "";
 	}
@@ -34,7 +40,7 @@ component accessors=true {
 	}
 
 	public struct function getWebsiteLoggedInUserDetails() {
-		var sessionData = getSessionData();
+		var sessionData = socket.getSocketData();
 
 		return sessionData.website_user ?: {};
 	}
