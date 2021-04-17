@@ -3,7 +3,8 @@
 	  , socket
 	  , setupChatWindow
 	  , showChatMessage
-	  , submitMessage;
+	  , submitMessage
+	  , showAccessDeniedMessage;
 
 // local functions (not sockio specific)
 	setupChatWindow = function( username ) {
@@ -29,11 +30,18 @@
 		return false;
 	};
 
+	showAccessDeniedMessage = function() {
+		$chatContainer.html( '<h3>Oops, looks like something went wrong here</h3>\
+			<p class="alert alert-error">You don\'t have permission to perform this action. Perhaps you have been timed out or logged out of another session. Please refresh the page to continue.</p>'
+		);
+	};
+
 
 // setup socket and listeners
 	socket = io( "/demo" ); // connect to socket.io namespace 'demo'
-	socket.on( 'userSet', setupChatWindow ); // fired once connection successful
+	socket.on( 'welcome', setupChatWindow ); // fired once connection successful
 	socket.on( 'newmsg', showChatMessage ); // fired on new incoming messages
+	socket.on( 'accessdenied', showAccessDeniedMessage ); // fired on new incoming messages
 	$chatContainer.on( "submit", "#chat-form", submitMessage ); // trigger sending messages
 
 } )( jQuery );
