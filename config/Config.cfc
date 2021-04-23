@@ -38,5 +38,10 @@ component {
 			  class      = "app.extensions.preside-ext-socket-io.interceptors.SocketIoInterceptors"
 			, properties = {}
 		});
+
+		ArrayAppend( arguments.conf.interceptorSettings.customInterceptionPoints, [
+			  "onSocketIoNamespaceBroadcast"
+			, "onSocketIoSocketBroadcast"
+		], true );
 	}
 }

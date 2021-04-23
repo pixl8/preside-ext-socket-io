@@ -7,6 +7,7 @@ component {
 	property name="serverHost"  inject="coldbox:setting:socketio.host";
 	property name="serverPort"  inject="coldbox:setting:socketio.port";
 	property name="eventRunner" inject="presideSocketIoEventRunner";
+	property name="adapter"     inject="presideSocketIoAdapter";
 
 // CONSTRUCTOR
 	public any function init() {
@@ -78,6 +79,7 @@ component {
 			, port        = serverPort
 			, start       = true
 			, eventRunner = eventRunner
+			, adapter     = adapter
 		);
 
 		_setServer( io );
