@@ -57,6 +57,19 @@ component {
 		return stats;
 	}
 
+	public any function getServer() {
+		return _getServer();
+	}
+
+	// proxies
+	public any function of() {
+		return _getServer().namespace( argumentCollection=arguments );
+	}
+
+	public any function namespace() {
+		return _getServer().namespace( argumentCollection=arguments );
+	}
+
 
 // PRIVATE HELPERS
 	private void function _discoverNamespaces() {
@@ -96,17 +109,17 @@ component {
 
 // GETTERS AND SETTERS
 	private any function _getServer() {
-	    return _server;
+	    return variables._socketIoServer;
 	}
-	private void function _setServer( required any server ) {
-	    _server = arguments.server;
+	private void function _setServer( required any socketIoServer ) {
+	    variables._socketIoServer = arguments.socketIoServer;
 	}
 
 	private array function _getNamespaces() {
-	    return _namespaces;
+	    return variables._namespaces;
 	}
 	private void function _setNamespaces( required array namespaces ) {
-	    _namespaces = arguments.namespaces;
+	    variables._namespaces = arguments.namespaces;
 	}
 
 }
