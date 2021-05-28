@@ -19,6 +19,19 @@ To get everything ready in your application:
 1. Install this extension (it comes bundled with [socket.io-lucee](https://github.com/pixl8/socket.io-lucee)): `box install preside-ext-socket-io`
 2. Understand how the websocket servlet runs on a separate port and make hosting provisions for that if you need to: [https://pixl8.github.io/socket.io-lucee/hosting/](https://pixl8.github.io/socket.io-lucee/hosting/)
 
+### Running the demo
+
+The extension comes with a super simple demo chat app and it is disabled by default. To enable it, set `settings.features.socketiodemo.enabled = false` in your *Config.cfc*. 
+
+> **Important:** the demo assumes that you have your hosting setup so that `/socket.io/` requests on the same port that your application is running on will be proxied to the servlet port. See [https://pixl8.github.io/socket.io-lucee/hosting/](https://pixl8.github.io/socket.io-lucee/hosting/).
+
+Once enabled, simply visit `/socketio/demo/` in your browser to try it out. The code can be found at:
+
+* `/assets/js/specific/socketiodemo/socketiodemo.js`: client side code
+* `/handlers/socketio/namespace/Demo.cfc`: the socket.io namespace that listens to incoming sockets
+* `/handlers/socketio/Demo.cfc`: handler that sets up the page
+* `/views/socketio/demo/index.cfm`: the view of the demo page
+```
 
 ## What this exension offers
 
