@@ -24,7 +24,7 @@ component {
 
 	private void function _setupFeatures( settings ) {
 		settings.features.socketio = settings.features.socketio ?: { enabled=true };
-		settings.features.socketiodemo = settings.features.socketiodemo ?: { enabled=true };
+		settings.features.socketiodemo = settings.features.socketiodemo ?: { enabled=false };
 	}
 
 	private void function _setupHealthchecks( settings ) {
