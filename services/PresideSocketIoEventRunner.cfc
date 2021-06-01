@@ -63,6 +63,10 @@ component extends="app.extensions.preside-ext-socket-io.socketiolucee.models.Soc
 		var reqCookies       = socketHttpReq.getCookies();
 		var presideSessionId = "";
 
+		if ( IsNull( local.reqCookies ) ) {
+			reqCookies = [];
+		}
+
 		for( var reqCookie in reqCookies ) {
 			if ( ( reqCookie.name ?: "" ) == "PSID" ) {
 				presideSessionId = reqCookie.value ?: "";
