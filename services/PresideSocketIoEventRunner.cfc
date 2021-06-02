@@ -59,12 +59,17 @@ component extends="app.extensions.preside-ext-socket-io.socketiolucee.models.Soc
 	}
 
 	private struct function _getPresideSessionDataFromSocket( required any socket ) {
-		var socketHttpReq    = arguments.socket.getHttpRequest();
+		var socketHttpReq = arguments.socket.getHttpRequest();
+
+		if ( IsNull( local.socketHttpReq ) ) {
+			return {};
+		}
+
 		var reqCookies       = socketHttpReq.getCookies();
 		var presideSessionId = "";
 
 		if ( IsNull( local.reqCookies ) ) {
-			reqCookies = [];
+			return {};
 		}
 
 		for( var reqCookie in reqCookies ) {
