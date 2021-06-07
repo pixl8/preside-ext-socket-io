@@ -13,13 +13,23 @@ component {
 // private helpers
 	private void function _setupExtensionSettings( settings ) {
 		var defaults = {
-			  host = settings.env.SOCKET_IO_HOST ?: ListFirst( cgi.http_host, ":" )
-			, port = settings.env.SOCKET_IO_PORT ?: 3000
+			  host                     = settings.env.SOCKET_IO_HOST                     ?: ListFirst( cgi.http_host, ":" )
+			, port                     = settings.env.SOCKET_IO_PORT                     ?: 3000
+			, enableCorsHandling       = settings.env.SOCKET_IO_ENABLE_CORS              ?: false
+			, pingInterval             = settings.env.SOCKET_IO_PING_INTERVAL            ?: 5000
+			, pingTimeout              = settings.env.SOCKET_IO_PING_TIMEOUT             ?: 25000
+			, maxTimeoutThreadPoolSize = settings.env.SOCKET_IO_TIMEOUT_THREAD_POOL_SIZE ?: 20
+			, allowedCorsOrigins       = ListToArray( settings.env.SOCKET_IO_CORS_ORIGINS ?: "*" )
 		};
 
 		settings.socketio      = settings.socketio ?: {};
-		settings.socketio.host = settings.socketio.host ?: defaults.host;
-		settings.socketio.port = settings.socketio.port ?: defaults.port;
+		settings.socketio.host                     = settings.socketio.host                     ?: defaults.host;
+		settings.socketio.port                     = settings.socketio.port                     ?: defaults.port;
+		settings.socketio.enableCorsHandling       = settings.socketio.enableCorsHandling       ?: defaults.enableCorsHandling;
+		settings.socketio.allowedCorsOrigins       = settings.socketio.allowedCorsOrigins       ?: defaults.allowedCorsOrigins;
+		settings.socketio.pingInterval             = settings.socketio.pingInterval             ?: defaults.pingInterval;
+		settings.socketio.pingTimeout              = settings.socketio.pingTimeout              ?: defaults.pingTimeout;
+		settings.socketio.maxTimeoutThreadPoolSize = settings.socketio.maxTimeoutThreadPoolSize ?: defaults.maxTimeoutThreadPoolSize;
 	}
 
 	private void function _setupFeatures( settings ) {

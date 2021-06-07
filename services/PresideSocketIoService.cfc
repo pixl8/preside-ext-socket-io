@@ -4,10 +4,15 @@
  */
 component {
 
-	property name="serverHost"  inject="coldbox:setting:socketio.host";
-	property name="serverPort"  inject="coldbox:setting:socketio.port";
-	property name="eventRunner" inject="presideSocketIoEventRunner";
-	property name="adapter"     inject="presideSocketIoAdapter";
+	property name="serverHost"               inject="coldbox:setting:socketio.host";
+	property name="serverPort"               inject="coldbox:setting:socketio.port";
+	property name="enableCorsHandling"       inject="coldbox:setting:socketio.enableCorsHandling";
+	property name="allowedCorsOrigins"       inject="coldbox:setting:socketio.allowedCorsOrigins";
+	property name="pingInterval"             inject="coldbox:setting:socketio.pingInterval";
+	property name="pingTimeout"              inject="coldbox:setting:socketio.pingTimeout";
+	property name="maxTimeoutThreadPoolSize" inject="coldbox:setting:socketio.maxTimeoutThreadPoolSize";
+	property name="eventRunner"              inject="presideSocketIoEventRunner";
+	property name="adapter"                  inject="presideSocketIoAdapter";
 
 // CONSTRUCTOR
 	public any function init() {
@@ -88,11 +93,16 @@ component {
 	private void function _setupServer() {
 		$SystemOutput( "Starting Socket.IO embededded server at [#serverHost#:#serverPort#]" );
 		var io = CreateObject( "app.extensions.preside-ext-socket-io.socketiolucee.models.SocketIoServer" ).init(
-			  host        = serverHost
-			, port        = serverPort
-			, start       = true
-			, eventRunner = eventRunner
-			, adapter     = adapter
+			  host                     = serverHost
+			, port                     = serverPort
+			, start                    = true
+			, eventRunner              = eventRunner
+			, adapter                  = adapter
+			, enableCorsHandling       = enableCorsHandling
+			, allowedCorsOrigins       = allowedCorsOrigins
+			, pingInterval             = pingInterval
+			, pingTimeout              = pingTimeout
+			, maxTimeoutThreadPoolSize = maxTimeoutThreadPoolSize
 		);
 
 		_setServer( io );
