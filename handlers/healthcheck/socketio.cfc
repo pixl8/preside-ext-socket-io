@@ -1,7 +1,10 @@
 component {
-	property name="presideSocketIoService" inject="presideSocketIoService";
 
 	private boolean function check() {
-		return presideSocketIoService.healthcheck();
+		if ( isFeatureEnabled( "socketio" ) ) {
+			return getModel( "presideSocketIoService" ).healthcheck();
+		}
+		return true;
 	}
+
 }
