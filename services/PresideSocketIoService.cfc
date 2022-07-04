@@ -37,10 +37,15 @@ component {
 	}
 
 	public boolean function healthcheck() {
-		var state         = _getServer().getState();
+		var socketIoServer = _getServer();
+		if ( IsNull( socketIoServer ) ) {
+			return false;
+		}
+
+		var state         = socketIoServer.getState();
 		var runningStates = [ "RUNNING", "STARTED", "STARTING" ];
 
-		if ( !_getServer().isRunning() && !ArrayFindNoCase( runningStates, state ) ) {
+		if ( !socketIoServer.isRunning() && !ArrayFindNoCase( runningStates, state ) ) {
 			$SystemOutput( "Socket.IO server is not running. Current state: #state#. Attempting to start now..." );
 			startServer();
 			return false;
@@ -119,7 +124,7 @@ component {
 
 // GETTERS AND SETTERS
 	private any function _getServer() {
-	    return variables._socketIoServer;
+	    return variables._socketIoServer ?: NullValue();
 	}
 	private void function _setServer( required any socketIoServer ) {
 	    variables._socketIoServer = arguments.socketIoServer;
