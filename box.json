@@ -19,7 +19,7 @@
         ".twgit_features_subject"
     ],
     "dependencies":{
-        "socketiolucee":"0.6.2"
+        "socketiolucee":"0.7.0"
     },
     "installPaths":{
         "socketiolucee":"socketiolucee/"
