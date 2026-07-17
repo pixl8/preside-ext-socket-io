@@ -1,5 +1,9 @@
 # Changelog
 
+# 7.0.0
+
+* Retag to a new version number  
+
 ## 0.7.0
 
 * Update socket-io.lucee lib with Lucee 7 support
